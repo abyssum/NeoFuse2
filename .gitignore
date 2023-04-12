@@ -1,0 +1,9 @@
+.nextflow*
+work/
+data/
+results/
+testing*
+*.pyc
+log/
+LOG/
+reports/
