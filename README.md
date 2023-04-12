@@ -1,7 +1,7 @@
 # NeoFuse2
-NeoFuse is a user-friendly pipeline for the prediction of fusion neoantigens from tumor RNA-seq data.
+NeoFuse2 is a user-friendly pipeline for the prediction of fusion neoantigens from tumor RNA-seq data.
 
-NeoFuse takes single-sample FASTQ files of RNA-seq reads (single- or paired-end) as input and predicts putative fusion neoantigens through five main analytical modules based on state-of-the-art computational tools:
+NeoFuse2 takes single-sample FASTQ files of RNA-seq reads (single- or paired-end) as input and predicts putative fusion neoantigens through five main analytical modules based on state-of-the-art computational tools:
 
 * Genotyping of class-I and II Human Leukocyte Antigen (HLA) genes at 4-digit resolution using OptiType (Szolek et al., 2014) and HLA-HD (cite).
 * Prediction of fusion peptides using Arriba (cite), together with confidence scores reflecting the likelihood that a fusion is caused by a tumor-specific genomic rearrangement and is not due to technical artifacts.
