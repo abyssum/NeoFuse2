@@ -1,0 +1,336 @@
+#!/usr/bin/python
+"""
+Requirements:
+    * Python >= 3.6.2
+
+Copyright (c) 2020 Georgios Fotakis <georgios.fotakis@i-med.ac.at>
+MIT License <http://opensource.org/licenses/MIT>
+
+"""
+
+import argparse, sys
+import csv
+import pandas as pd
+
+
+def desperation(inFile1, inFile2, outFile):
+    gene = []
+    tpm = []
+    gene1tpm = []
+    gene2tpm = []
+    bkpoint1 = []
+    bkpoint2 = []
+    split_read1 = []
+    split_read2 = []
+    disco_reads = []
+    closest_bkp1 = []
+    closest_bkp2 = []
+    hlaTpm = []
+    tpmAvg = []
+    fusion = []
+    fpep = []
+    mIc = []
+    mRank = []
+    eveType = []
+    stopCod = []
+    arConf = []
+
+    with open(inFile1) as in_file:
+        csv_reader = csv.reader(in_file, delimiter="\t")
+        in_file.readline()
+        for row in csv_reader:
+            gene.append(row[0])
+            if row[2] == "0":
+                tpm.append("NA")
+            else:
+                tpm.append(row[2])
+    in_file.close()
+
+    with open(inFile2) as in_file:
+        csv_reader = csv.reader(in_file, delimiter="\t")
+        in_file.readline()
+        for row in csv_reader:
+            fusion.append(row[0])
+            bkpoint1.append(row[3])
+            bkpoint2.append(row[4])
+            split_read1.append(row[5])
+            split_read2.append(row[6])
+            disco_reads.append(row[7])
+            closest_bkp1.append(row[8])
+            closest_bkp2.append(row[9])
+            fpep.append(row[11])
+            mIc.append(row[12])
+            mRank.append(row[13])
+            eveType.append(row[14])
+            stopCod.append(row[15])
+            arConf.append(row[16])
+            if "," in row[1]:
+                gene1tpm.append(row[1] + "\t" + "NA")
+            elif "," in row[2]:
+                gene2tpm.append(row[2] + "\t" + "NA")
+            for i in range(0, len(tpm)):
+                if gene[i] == row[1].split("(")[0] and "," not in row[1]:
+                    if tpm[i] == "NA":
+                        gene1tpm.append(row[1] + "\t" + tpm[i])
+                    elif tpm[i] != "NA":
+                        gene1tpm.append(row[1] + "\t" + "%.2f" % float(tpm[i]))
+                if gene[i] == row[2].split("(")[0] and "," not in row[2]:
+                    if tpm[i] == "NA":
+                        gene2tpm.append(row[2] + "\t" + tpm[i])
+                    elif tpm[i] != "NA":
+                        gene2tpm.append(row[2] + "\t" + "%.2f" % float(tpm[i]))
+                if gene[i] == row[10].split("*")[0]:
+                    if tpm[i] == "NA":
+                        hlaTpm.append(row[10] + "\t" + tpm[i])
+                    elif tpm[i] != "NA":
+                        hlaTpm.append(row[10] + "\t" + "%.2f" % float(tpm[i]))
+    in_file.close()
+
+    for i in range(0, len(gene1tpm)):
+        if "NA" in gene1tpm[i].split("\t")[1] or "NA" in gene2tpm[i].split("\t")[1]:
+            tpmAvg.append("NA")
+        else:
+            tpmAvg.append(
+                "%.2f"
+                % float(
+                    (
+                        float(gene1tpm[i].split("\t")[1])
+                        + float(gene2tpm[i].split("\t")[1])
+                    )
+                    / 2.0
+                )
+            )
+
+    with open(outFile, "+w") as out_file:
+        out_file.write(
+            "Fusion\tGene1\tGene2\tBreakpoint1\tBreakpoint2\tSplit_Reads1\tSplit_Reads2\tDiscordant_Reads\tClosest_Breakpoint1\tClosest_Breakpoint2\tHLA_Type\tFusion_Peptide\tIC50\tRank\tEvent_Type\tStop_Codon\tConfidence\tGene1_TPM\tGene2_TPM\tAvg_TPM\tHLA_TPM\n"
+        )
+        for j in range(0, len(fusion)):
+            out_file.write(
+                fusion[j]
+                + "\t"
+                + gene1tpm[j].split("\t")[0]
+                + "\t"
+                + gene2tpm[j].split("\t")[0]
+                + "\t"
+                + bkpoint1[j]
+                + "\t"
+                + bkpoint2[j]
+                + "\t"
+                + split_read1[j]
+                + "\t"
+                + split_read2[j]
+                + "\t"
+                + disco_reads[j]
+                + "\t"
+                + closest_bkp1[j]
+                + "\t"
+                + closest_bkp2[j]
+                + "\t"
+                + hlaTpm[j].split("\t")[0]
+                + "\t"
+                + fpep[j]
+                + "\t"
+                + mIc[j]
+                + "\t"
+                + mRank[j]
+                + "\t"
+                + eveType[j]
+                + "\t"
+                + stopCod[j]
+                + "\t"
+                + arConf[j]
+                + "\t"
+                + gene1tpm[j].split("\t")[1]
+                + "\t"
+                + gene2tpm[j].split("\t")[1]
+                + "\t"
+                + tpmAvg[j]
+                + "\t"
+                + hlaTpm[j].split("\t")[1]
+                + "\n"
+            )
+    out_file.close()
+
+
+def desperation_mixMHC2pred(inFile1, inFile2, outFile):
+    gene = []
+    tpm = []
+    gene1tpm = []
+    gene2tpm = []
+    bkpoint1 = []
+    bkpoint2 = []
+    split_read1 = []
+    split_read2 = []
+    disco_reads = []
+    closest_bkp1 = []
+    closest_bkp2 = []
+    hla_genes = []
+    hla_tpm = []
+    hlaTpm = []
+    hlas = []
+    tpmAvg = []
+    fusion = []
+    fpep = []
+    mRank = []
+    eveType = []
+    stopCod = []
+    arConf = []
+
+    with open(inFile1) as in_file:
+        csv_reader = csv.reader(in_file, delimiter="\t")
+        in_file.readline()
+        for row in csv_reader:
+            gene.append(row[0])
+            if row[2] == "0":
+                tpm.append("NA")
+            else:
+                tpm.append(row[2])
+    in_file.close()
+
+    with open(inFile2) as in_file:
+        csv_reader = csv.reader(in_file, delimiter="\t")
+        in_file.readline()
+        for row in csv_reader:
+            fusion.append(row[0])
+            bkpoint1.append(row[3])
+            bkpoint2.append(row[4])
+            split_read1.append(row[5])
+            split_read2.append(row[6])
+            disco_reads.append(row[7])
+            closest_bkp1.append(row[8])
+            closest_bkp2.append(row[9])
+            hlas.append(row[10])
+            fpep.append(row[11])
+            mRank.append(row[12])
+            eveType.append(row[13])
+            stopCod.append(row[14])
+            arConf.append(row[15])
+            if "," in row[1]:
+                gene1tpm.append(row[1] + "\t" + "NA")
+            elif "," in row[2]:
+                gene2tpm.append(row[2] + "\t" + "NA")
+            for i in range(0, len(tpm)):
+                if gene[i] == row[1].split("(")[0] and "," not in row[1]:
+                    if tpm[i] == "NA":
+                        gene1tpm.append(row[1] + "\t" + tpm[i])
+                    elif tpm[i] != "NA":
+                        gene1tpm.append(row[1] + "\t" + "%.2f" % float(tpm[i]))
+                if gene[i] == row[2].split("(")[0] and "," not in row[2]:
+                    if tpm[i] == "NA":
+                        gene2tpm.append(row[2] + "\t" + tpm[i])
+                    elif tpm[i] != "NA":
+                        gene2tpm.append(row[2] + "\t" + "%.2f" % float(tpm[i]))
+
+    for i in range(0, len(gene)):
+        if "HLA-" in gene[i]:
+            hla_genes.append(gene[i].split("-")[1])
+            hla_tpm.append(tpm[i])
+
+    for hla in hlas:
+        for i in range(0, len(hla_genes)):
+            flag = ""
+            if hla.split("*")[0] in hla_genes[i]:
+                if hla_tpm[i] == "NA":
+                    hlaTpm.append(hla + "\tNA")
+                elif hla_tpm[i] != "NA":
+                    hlaTpm.append(hla + "\t" + "%.2f" % float(hla_tpm[i]))
+                # hlaTpm.append(hla+"\t"+"%.2f" % float(hla_tpm[i]))
+                break
+            else:
+                flag = "not_found"
+        if flag == "not_found":
+            hlaTpm.append(hla + "\tNA")
+            flag = ""
+
+    for i in range(0, len(gene1tpm)):
+        if "NA" in gene1tpm[i].split("\t")[1] or "NA" in gene2tpm[i].split("\t")[1]:
+            tpmAvg.append("NA")
+        else:
+            tpmAvg.append(
+                "%.2f"
+                % float(
+                    (
+                        float(gene1tpm[i].split("\t")[1])
+                        + float(gene2tpm[i].split("\t")[1])
+                    )
+                    / 2.0
+                )
+            )
+    in_file.close()
+
+    with open(outFile, "+w") as out_file:
+        out_file.write(
+            "Fusion\tGene1\tGene2\tBreakpoint1\tBreakpoint2\tSplit_Reads1\tSplit_Reads2\tDisco_Reads\tClosest_Breakpoint1\tClosest_Breakpoint2\tHLA_Type\tFusion_Peptide\tRank\tEvent_Type\tStop_Codon\tConfidence\tGene1_TPM\tGene2_TPM\tAvg_TPM\tHLA_TPM\n"
+        )
+        for j in range(0, len(fusion)):
+            out_file.write(
+                fusion[j]
+                + "\t"
+                + gene1tpm[j].split("\t")[0]
+                + "\t"
+                + gene2tpm[j].split("\t")[0]
+                + "\t"
+                + bkpoint1[j]
+                + "\t"
+                + bkpoint2[j]
+                + "\t"
+                + split_read1[j]
+                + "\t"
+                + split_read2[j]
+                + "\t"
+                + disco_reads[j]
+                + "\t"
+                + closest_bkp1[j]
+                + "\t"
+                + closest_bkp2[j]
+                + "\t"
+                + hlaTpm[j].split("\t")[0]
+                + "\t"
+                + fpep[j]
+                + "\t"
+                + mRank[j]
+                + "\t"
+                + eveType[j]
+                + "\t"
+                + stopCod[j]
+                + "\t"
+                + arConf[j]
+                + "\t"
+                + gene1tpm[j].split("\t")[1]
+                + "\t"
+                + gene2tpm[j].split("\t")[1]
+                + "\t"
+                + tpmAvg[j]
+                + "\t"
+                + hlaTpm[j].split("\t")[1]
+                + "\n"
+            )
+    out_file.close()
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        usage="final_out.py [-h] -t {/path/to/tmp/TPMinput/} -i {/path/to/tmp/filtered_input/} -o {/path/to/output/}"
+    )
+    parser.add_argument("-t", "--tpmInput", help="input file", required=True)
+    parser.add_argument("-i", "--Input", help="input file", required=True)
+    parser.add_argument("-o", "--Output", help="Output file", required=True)
+    parser.add_argument(
+        "--mixMHC2pred",
+        type=bool,
+        nargs="?",
+        const=True,
+        default=False,
+        help="Activate mixMHC2pred mode",
+    )
+    args = parser.parse_args()
+    inFile1 = args.tpmInput
+    inFile2 = args.Input
+    outFile = args.Output
+    mix = args.mixMHC2pred
+
+    if mix:
+        desperation_mixMHC2pred(inFile1, inFile2, outFile)
+    else:
+        desperation(inFile1, inFile2, outFile)
