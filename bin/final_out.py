@@ -44,7 +44,6 @@ def desperation(inFile1, inFile2, outFile):
                 tpm.append("NA")
             else:
                 tpm.append(row[2])
-    in_file.close()
 
     with open(inFile2) as in_file:
         csv_reader = csv.reader(in_file, delimiter="\t")
@@ -84,7 +83,6 @@ def desperation(inFile1, inFile2, outFile):
                         hlaTpm.append(row[10] + "\t" + tpm[i])
                     elif tpm[i] != "NA":
                         hlaTpm.append(row[10] + "\t" + "%.2f" % float(tpm[i]))
-    in_file.close()
 
     for i in range(0, len(gene1tpm)):
         if "NA" in gene1tpm[i].split("\t")[1] or "NA" in gene2tpm[i].split("\t")[1]:
@@ -150,7 +148,6 @@ def desperation(inFile1, inFile2, outFile):
                 + hlaTpm[j].split("\t")[1]
                 + "\n"
             )
-    out_file.close()
 
 
 def desperation_mixMHC2pred(inFile1, inFile2, outFile):
@@ -186,7 +183,6 @@ def desperation_mixMHC2pred(inFile1, inFile2, outFile):
                 tpm.append("NA")
             else:
                 tpm.append(row[2])
-    in_file.close()
 
     with open(inFile2) as in_file:
         csv_reader = csv.reader(in_file, delimiter="\t")
@@ -257,7 +253,6 @@ def desperation_mixMHC2pred(inFile1, inFile2, outFile):
                     / 2.0
                 )
             )
-    in_file.close()
 
     with open(outFile, "+w") as out_file:
         out_file.write(
@@ -306,7 +301,6 @@ def desperation_mixMHC2pred(inFile1, inFile2, outFile):
                 + hlaTpm[j].split("\t")[1]
                 + "\n"
             )
-    out_file.close()
 
 
 if __name__ == "__main__":

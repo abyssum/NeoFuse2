@@ -46,7 +46,6 @@ def seek_fusePep(
             disco_reads.append(line.split("#")[8])
             closest_bkp1.append(line.split("#")[9])
             closest_bkp2.append(line.split("#")[10].replace("\n", ""))
-    in_file.close()
 
     return (
         fusionGene,
@@ -75,14 +74,14 @@ def seek_hla(optiInFile, outDir, hla):
             hl.append(h)
         hla = " ".join(hl)
         unsupported = "\n".join(uns)
-    in_file.close()
+
     out = outDir + "_unsupported.txt"
     with open(out, "+w") as out:
         out.write(
             "The following HLA types were predicted by OptiType, but are not supported by MHCFlurry:\n"
         )
         out.write(unsupported)
-    out.close()
+
     return hla
 
 
@@ -170,12 +169,11 @@ def tmp_out_pep(
                     counter = 1
             counter += 1
             fileID += 1
-    out_file.close()
+
     # write the associations file - to be used later for multiplexing the output files into a single final output
     with open(tmpOutFile2, "+w") as out_file2:
         for j in gene_file:
             out_file2.write("%s\n" % j)
-    out_file2.close()
 
 
 if __name__ == "__main__":

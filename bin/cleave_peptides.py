@@ -88,7 +88,7 @@ def sequence_hound(
                 elif row[15] == "out-of-frame":
                     ftype.append("Fusion-out-of-frame")
                 pepSeq.append(row[28])
-    csv_file.close()
+
     return (
         fusionGene,
         bkpoint1,
@@ -159,7 +159,7 @@ def window_onslaught(
                         )
                     )
             if "Fusion-out-of-frame" == ftype[i]:
-                start = seq.index("|")  # get the position of the junction
+                start = seq.index("|")  # get the position of the junction point
                 if (
                     winSize > start
                 ):  # check if there are less amino acids than the window size
@@ -223,7 +223,6 @@ def window_onslaught(
                                 closest_bkp2[i],
                             )
                         )
-    out_file.close()
 
 
 if __name__ == "__main__":

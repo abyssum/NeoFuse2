@@ -120,7 +120,7 @@ def tmp_out_pep(
                 + str(fileID)
                 + ".tsv"
             )
-            if not hla:  # check if there are HLAs supported by mixMHCpred
+            if not hla:  # check if there are HLAs supported by mixMHC2pred
                 pass
             else:
                 gene_file.append(
@@ -162,12 +162,12 @@ def tmp_out_pep(
                     counter = 1
             counter += 1
             fileID += 1
-    out_file.close()
+
     # write the associations file - to be used later for multiplexing the output files into a single final output
     with open(tmpOutFile2, "+w") as out_file2:
         for j in gene_file:
             out_file2.write("%s\n" % j)
-    out_file2.close()
+
 
 if __name__ == "__main__":
     # Parse arguments

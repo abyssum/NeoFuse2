@@ -33,7 +33,6 @@ def get_hlas(in_file, hlas=[]):
             else:
                 hlas.append(h)
     return hlas
-    ifile.close()
 
 
 def filter_class_I(hlas=[]):
@@ -98,12 +97,11 @@ def out_mhcii(out_file1, out_file2, out_file3, hlas, supported, model_list):
     with open(supported) as sup:
         for row in sup:
             supp.append(row.replace("\n", ""))
-    sup.close()
+
     # Get mixMHC2pred models
     with open(model_list) as mod:
         for row in mod:
             model.append(row.replace("\n", ""))
-    mod.close()
 
     # Get valid predicted HLA types (and process DRB alleles)
     for hla in sanitized_hlas:
@@ -223,18 +221,15 @@ def out_mhcii(out_file1, out_file2, out_file3, hlas, supported, model_list):
     with open(out_file1, "w") as ofile1:
         hla_ii_no_dups = list(dict.fromkeys(hla_ii))
         ofile1.write("\n".join(hla_ii_no_dups))
-    ofile1.close()
 
     with open(out_file2, "w") as ofile2:
         ofile2.write("The following HLAs are not supported by mixMHC2pred:\n")
         unsupported_no_dups = list(dict.fromkeys(unsupported))
         ofile2.write("\n".join(unsupported_no_dups))
-    ofile2.close()
 
     with open(out_file3, "w") as ofile3:
         hla_conf_no_dups = list(dict.fromkeys(hla_conf))
         ofile3.write("\n".join(hla_conf_no_dups))
-    ofile3.close()
 
 
 if __name__ == "__main__":

@@ -52,7 +52,6 @@ def final_out(infileAssoc, outfile):
             disco_reads.append(line.split("#")[9])
             closest_bkp1.append(line.split("#")[10])
             closest_bkp2.append(line.split("#")[11].replace("\n", ""))
-    in_file.close()
 
     with open(outfile, "+w") as out_file:
         out_file.write(
@@ -149,7 +148,6 @@ def final_out(infileAssoc, outfile):
                             + "\n"
                         )
             i += 1
-    out_file.close()
 
 
 if __name__ == "__main__":
