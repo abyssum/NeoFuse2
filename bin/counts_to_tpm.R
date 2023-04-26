@@ -21,7 +21,7 @@ mytpm <- function(counts, lengths) {
 }
 
 myrpkm <- function(counts, lengths) {
-    rate <- counts / lengths 
+    rate <- counts / lengths
     rate / sum(counts) * 1e6
 }
 
