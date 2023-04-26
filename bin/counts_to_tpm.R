@@ -2,11 +2,11 @@
 args = commandArgs(trailingOnly=TRUE)
 
 if (length(args)==0) {
-  stop("At least one argument must be supplied (input file).n", call.=FALSE)
+    stop("At least one argument must be supplied (input file).n", call.=FALSE)
 } else if (length(args)==1) {
-  # default output file
-  args[2] = "./tpm.out.txt"
-  args[3] = "./rpkm.out.txt"
+    # default output file
+    args[2] = "./tpm.out.txt"
+    args[3] = "./rpkm.out.txt"
 }
 
 # Import count matrix
@@ -16,13 +16,13 @@ names(counts) <- c("Geneid", "Length", "Counts")
 
 # Define TPM/RPKM functions
 mytpm <- function(counts, lengths) {
-  rate <- counts / lengths
-  rate / sum(rate) * 1e6
+    rate <- counts / lengths
+    rate / sum(rate) * 1e6
 }
 
 myrpkm <- function(counts, lengths) {
-  rate <- counts / lengths 
-  rate / sum(counts) * 1e6
+    rate <- counts / lengths 
+    rate / sum(counts) * 1e6
 }
 
 # Calulate TPM/RPKM and write output
