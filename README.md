@@ -1,4 +1,4 @@
-# NeoFuse2
+# NeoFuse2 (under dev)
 NeoFuse2 is a user-friendly pipeline for the prediction of fusion neoantigens from tumor RNA-seq data.
 
 NeoFuse2 takes single-sample FASTQ files of RNA-seq reads (single- or paired-end) as input and predicts putative fusion neoantigens through five main analytical modules based on state-of-the-art computational tools:
